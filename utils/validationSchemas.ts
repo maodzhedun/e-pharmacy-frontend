@@ -6,7 +6,14 @@ export const loginSchema = yup.object({
   password: yup.string().required('Password is required').min(6, 'At least 6 characters'),
 });
 
-export const productSchema = yup.object({
+export const productSchema: yup.ObjectSchema<{
+  name: string;
+  suppliers: string;
+  stock: string;
+  price: string;
+  category: string;
+  photo?: string;
+}> = yup.object({
   name: yup.string().required('Product name is required').trim(),
   suppliers: yup.string().required('Supplier is required').trim(),
   stock: yup.string().required('Stock is required'),
@@ -15,12 +22,19 @@ export const productSchema = yup.object({
     .string()
     .required('Category is required')
     .test('valid-category', 'Select a valid category', (val) =>
-      val ? PRODUCT_CATEGORIES.includes(val) : false
+      val ? (PRODUCT_CATEGORIES as readonly string[]).includes(val) : false
     ),
   photo: yup.string().optional(),
 });
 
-export const supplierSchema = yup.object({
+export const supplierSchema: yup.ObjectSchema<{
+  name: string;
+  address: string;
+  suppliers: string;
+  date: string;
+  amount: string;
+  status: string;
+}> = yup.object({
   name: yup.string().required('Supplier name is required').trim(),
   address: yup.string().required('Address is required').trim(),
   suppliers: yup.string().required('Company is required').trim(),
@@ -30,6 +44,6 @@ export const supplierSchema = yup.object({
     .string()
     .required('Status is required')
     .test('valid-status', 'Select a valid status', (val) =>
-      val ? SUPPLIER_STATUSES.includes(val) : false
+      val ? (SUPPLIER_STATUSES as readonly string[]).includes(val) : false
     ),
 });

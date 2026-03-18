@@ -1,25 +1,50 @@
-export interface User {
-  _id: string;
-  name: string;
-  email: string;
-}
-
 export interface AuthCredentials {
   email: string;
   password: string;
 }
 
-// ============ Product ============
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export interface DashboardData {
+  statistics: {
+    products: number;
+    suppliers: number;
+    customers: number;
+  };
+  recentCustomers: Customer[];
+  incomeExpenses: IncomeExpense[];
+}
+
+export interface IncomeExpense {
+  type: string;
+  name: string;
+  amount: string;
+}
+
+export interface Order {
+  _id: string;
+  name: string;
+  photo?: string;
+  address: string;
+  products: number;
+  order_date: string;
+  price: string;
+  status: string;
+}
+
 export interface Product {
   _id: string;
-  photo: string;
   name: string;
-  suppliers: string;
-  stock: string;
-  price: string;
   category: string;
-  createdAt?: string;
-  updatedAt?: string;
+  stock: string;
+  suppliers: string;
+  price: string;
+  photo?: string;
 }
 
 export interface ProductFormData {
@@ -31,32 +56,6 @@ export interface ProductFormData {
   photo?: string;
 }
 
-// ============ Customer ============
-export interface Customer {
-  _id: string;
-  image?: string;
-  photo?: string;
-  name: string;
-  email: string;
-  spent: string;
-  phone: string;
-  address: string;
-  register_date: string;
-}
-
-// ============ Order ============
-export interface Order {
-  _id: string;
-  photo: string;
-  name: string;
-  address: string;
-  products: string;
-  price: string;
-  status: string;
-  order_date: string;
-}
-
-// ============ Supplier ============
 export interface Supplier {
   _id: string;
   name: string;
@@ -65,8 +64,6 @@ export interface Supplier {
   date: string;
   amount: string;
   status: string;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 export interface SupplierFormData {
@@ -78,52 +75,19 @@ export interface SupplierFormData {
   status: string;
 }
 
-// ============ Income/Expense ============
-export interface IncomeExpense {
+export interface Customer {
   _id: string;
   name: string;
-  amount: string;
-  type: 'Income' | 'Expense' | 'Error';
+  email: string;
+  address: string;
+  phone: string;
+  register_date: string;
+  spent?: string;
+  image?: string;
+  photo?: string;
 }
 
-// ============ Dashboard ============
-export interface DashboardData {
-  statistics: {
-    products: number;
-    suppliers: number;
-    customers: number;
-  };
-  recentCustomers: Customer[];
-  incomeExpenses: IncomeExpense[];
-}
-
-// ============ Paginated Responses ============
-export interface PaginatedResponse {
-  total: number;
-  page: number;
-  perPage: number;
+export interface PaginatedResponse<T> {
+  [key: string]: T[] | number;
   totalPages: number;
-}
-
-export interface ProductsResponse extends PaginatedResponse {
-  products: Product[];
-}
-
-export interface OrdersResponse extends PaginatedResponse {
-  orders: Order[];
-}
-
-export interface SuppliersResponse extends PaginatedResponse {
-  suppliers: Supplier[];
-}
-
-export interface CustomersResponse extends PaginatedResponse {
-  customers: Customer[];
-}
-
-// ============ Filters ============
-export interface ListFilters {
-  name?: string;
-  page?: number;
-  limit?: number;
 }
