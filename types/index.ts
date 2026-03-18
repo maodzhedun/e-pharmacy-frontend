@@ -91,3 +91,37 @@ export interface PaginatedResponse<T> {
   [key: string]: T[] | number;
   totalPages: number;
 }
+
+export interface ListFilters {
+  page?: number;
+  limit?: number;
+  name?: string;
+}
+
+export interface OrdersResponse {
+  orders: Order[];
+  totalPages: number;
+  page: number;
+  total: number;
+}
+
+export interface ProductsResponse {
+  products: Product[];
+  totalPages: number;
+  page: number;
+  total: number;
+}
+
+export interface SuppliersResponse {
+  suppliers: Supplier[];
+  totalPages: number;
+  page: number;
+  total: number;
+}
+
+export interface CustomersResponse {
+  customers: Customer[];
+  totalPages: number;
+  page: number;
+  total: number;
+}
