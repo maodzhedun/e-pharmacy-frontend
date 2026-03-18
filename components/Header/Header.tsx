@@ -1,48 +1,64 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LogOut } from 'lucide-react';
+import { Menu, LogOut } from 'lucide-react';
 import { useAuth, useLogout } from '@/hooks/useAuth';
-import Icon from '@/components/ui/Icon';
 import Sidebar from './Sidebar';
+
+const PAGE_TITLES: Record<string, string> = {
+  '/dashboard': 'Dashboard',
+  '/orders': 'All orders',
+  '/products': 'All products',
+  '/suppliers': 'All suppliers',
+  '/customers': 'All customers',
+};
 
 export default function Header() {
   const { user } = useAuth();
   const { mutate: logout, isPending } = useLogout();
+  const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const pageTitle = PAGE_TITLES[pathname] || 'Dashboard';
 
   return (
     <>
-      <Sidebar />
-      <header className="ml-[72px] flex h-[72px] items-center justify-between border-b border-border bg-white px-5 md:ml-[80px] md:h-[80px] md:px-8 lg:px-10">
-        <div className="flex items-center gap-2">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <Icon name="logo" size={32} />
-            <span className="hidden text-base font-bold text-text md:inline">
-              Medicine Store
-            </span>
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <header className="ml-0 flex h-[56px] items-center justify-between border-b border-border-light bg-white px-4 sm:h-[60px] sm:px-5 md:ml-[72px] md:h-[72px] md:px-8">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Hamburger — mobile only */}
+          <button onClick={() => setSidebarOpen(true)} className="md:hidden">
+            <Menu size={22} className="text-text sm:h-6 sm:w-6" />
+          </button>
+
+          {/* Logo */}
+          <Link href="/dashboard" className="flex items-center gap-1.5 sm:gap-2">
+            <img src="/images/logo.svg" alt="" width={32} height={32} className="sm:h-9 sm:w-9" />
+            <span className="text-base font-bold text-text sm:text-lg">Medicine store</span>
           </Link>
-          <span className="hidden text-text-light md:inline">/</span>
-          <Link
-            href="/dashboard"
-            className="hidden text-sm text-text-secondary transition-colors hover:text-primary md:inline"
-          >
-            Dashboard
-          </Link>
+
+          {/* Subtitle + email — tablet+ */}
+          <div className="hidden items-center gap-2 md:flex">
+            <span className="text-text-light">|</span>
+            <span className="text-sm text-text-secondary">{pageTitle}</span>
+            <span className="text-text-light">|</span>
+            <span className="text-sm text-text-secondary">{user?.email || 'vendor@gmail.com'}</span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <span className="hidden text-sm text-text-secondary md:inline">
-            {user?.email || 'vendor@gmail.com'}
-          </span>
-          <button
-            onClick={() => logout()}
-            disabled={isPending}
-            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-primary transition-colors hover:bg-primary-light disabled:opacity-50"
-          >
-            <LogOut size={18} />
-            <span className="hidden md:inline">Logout</span>
-          </button>
-        </div>
+        {/* Logout */}
+        <button
+          onClick={() => logout()}
+          disabled={isPending}
+          className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary-dark disabled:opacity-50 sm:h-[40px] sm:w-[40px]"
+          title="Logout"
+        >
+          <LogOut size={16} className="sm:h-[18px] sm:w-[18px]" />
+        </button>
       </header>
     </>
   );

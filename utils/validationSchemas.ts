@@ -2,14 +2,8 @@ import * as yup from 'yup';
 import { PRODUCT_CATEGORIES, SUPPLIER_STATUSES } from './constants';
 
 export const loginSchema = yup.object({
-  email: yup
-    .string()
-    .email('Invalid email format')
-    .required('Email is required'),
-  password: yup
-    .string()
-    .min(6, 'Minimum 6 characters')
-    .required('Password is required'),
+  email: yup.string().email('Invalid email').required('Email is required').trim(),
+  password: yup.string().required('Password is required').min(6, 'At least 6 characters'),
 });
 
 export const productSchema = yup.object({
@@ -19,19 +13,23 @@ export const productSchema = yup.object({
   price: yup.string().required('Price is required'),
   category: yup
     .string()
-    .oneOf([...PRODUCT_CATEGORIES], 'Select a valid category')
-    .required('Category is required'),
+    .required('Category is required')
+    .test('valid-category', 'Select a valid category', (val) =>
+      val ? PRODUCT_CATEGORIES.includes(val) : false
+    ),
   photo: yup.string().optional(),
 });
 
 export const supplierSchema = yup.object({
-  name: yup.string().required('Name is required').trim(),
+  name: yup.string().required('Supplier name is required').trim(),
   address: yup.string().required('Address is required').trim(),
   suppliers: yup.string().required('Company is required').trim(),
   date: yup.string().required('Delivery date is required'),
   amount: yup.string().required('Amount is required'),
   status: yup
     .string()
-    .oneOf([...SUPPLIER_STATUSES], 'Select a valid status')
-    .required('Status is required'),
+    .required('Status is required')
+    .test('valid-status', 'Select a valid status', (val) =>
+      val ? SUPPLIER_STATUSES.includes(val) : false
+    ),
 });

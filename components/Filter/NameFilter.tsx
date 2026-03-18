@@ -1,18 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Search } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { SlidersHorizontal } from 'lucide-react';
 
 interface Props {
   placeholder?: string;
   onFilter: (value: string) => void;
 }
 
-export default function NameFilter({
-  placeholder = 'User Name',
-  onFilter,
-}: Props) {
+export default function NameFilter({ placeholder = 'User Name', onFilter }: Props) {
   const [value, setValue] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -21,24 +17,21 @@ export default function NameFilter({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-5 flex gap-3">
-      <div className="relative max-w-[280px] flex-1">
-        <Search
-          size={16}
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-text-light"
-        />
-        <input
-          type="text"
-          value={value}
-          onChange={e => setValue(e.target.value)}
-          placeholder={placeholder}
-          className="h-11 w-full rounded-xl border border-border bg-white pl-10 pr-4 text-sm text-text outline-none transition-colors placeholder:text-text-light focus:border-primary"
-        />
-      </div>
-      <Button type="submit" size="sm">
-        <Search size={16} className="mr-1.5" />
+    <form onSubmit={handleSubmit} className="flex items-center gap-2 sm:gap-3">
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={placeholder}
+        className="h-[40px] w-full max-w-[150px] rounded-full border border-border bg-white px-4 text-xs text-text outline-none transition-colors placeholder:text-text-light focus:border-primary sm:h-[44px] sm:max-w-[220px] sm:px-5 sm:text-sm md:max-w-[260px]"
+      />
+      <button
+        type="submit"
+        className="flex h-[40px] shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-medium text-white transition-colors hover:bg-primary-dark sm:h-[44px] sm:gap-2 sm:px-6 sm:text-sm"
+      >
+        <SlidersHorizontal size={14} />
         Filter
-      </Button>
+      </button>
     </form>
   );
 }

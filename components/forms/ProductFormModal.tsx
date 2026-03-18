@@ -7,9 +7,6 @@ import { PRODUCT_CATEGORIES } from '@/utils/constants';
 import { useAddProduct, useUpdateProduct } from '@/hooks/usePharmacy';
 import type { Product, ProductFormData } from '@/types';
 import Modal from '@/components/ui/Modal';
-import Input from '@/components/ui/Input';
-import Select from '@/components/ui/Select';
-import Button from '@/components/ui/Button';
 
 interface Props {
   isOpen: boolean;
@@ -70,57 +67,105 @@ export default function ProductFormModal({ isOpen, onClose, product }: Props) {
     }
   };
 
-  const categoryOptions = PRODUCT_CATEGORIES.map(c => ({ value: c, label: c }));
+  // Mobile: "Edit data" / Desktop: "Edit product"
+  const title = isEditing ? (
+    <>
+      <span className="md:hidden">Edit data</span>
+      <span className="hidden md:inline">Edit product</span>
+    </>
+  ) : (
+    'Add a new product'
+  );
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={isEditing ? 'Edit Product' : 'Add New Product'}
-    >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Input
-          {...register('name')}
-          label="Product Info"
-          placeholder="Product name"
-          error={errors.name?.message}
-        />
-        <Select
-          {...register('category')}
-          label="Category"
-          options={categoryOptions}
-          error={errors.category?.message}
-        />
-        <Input
-          {...register('stock')}
-          label="Stock"
-          placeholder="Quantity"
-          error={errors.stock?.message}
-        />
-        <Input
-          {...register('suppliers')}
-          label="Suppliers"
-          placeholder="Supplier name"
-          error={errors.suppliers?.message}
-        />
-        <Input
-          {...register('price')}
-          label="Price"
-          placeholder="Price"
-          error={errors.price?.message}
-        />
-        <div className="flex gap-3 pt-2">
-          <Button type="submit" isLoading={isPending} className="flex-1">
+    <Modal isOpen={isOpen} onClose={onClose} title={title}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* 2-col grid on desktop, 1-col on mobile */}
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+          <div>
+            <input
+              {...register('name')}
+              placeholder="Product Info"
+              className="h-[44px] w-full rounded-full border border-border bg-white px-4 text-sm text-text outline-none placeholder:text-text-light focus:border-primary"
+            />
+            {errors.name && (
+              <p className="mt-1 pl-4 text-xs text-danger">
+                {errors.name.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <select
+              {...register('category')}
+              className="h-[44px] w-full appearance-none rounded-full border border-border bg-white px-4 text-sm text-text outline-none focus:border-primary"
+            >
+              <option value="">Category</option>
+              {PRODUCT_CATEGORIES.map(c => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            {errors.category && (
+              <p className="mt-1 pl-4 text-xs text-danger">
+                {errors.category.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              {...register('stock')}
+              placeholder="Stock"
+              className="h-[44px] w-full rounded-full border border-border bg-white px-4 text-sm text-text outline-none placeholder:text-text-light focus:border-primary"
+            />
+            {errors.stock && (
+              <p className="mt-1 pl-4 text-xs text-danger">
+                {errors.stock.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              {...register('suppliers')}
+              placeholder="Suppliers"
+              className="h-[44px] w-full rounded-full border border-border bg-white px-4 text-sm text-text outline-none placeholder:text-text-light focus:border-primary"
+            />
+            {errors.suppliers && (
+              <p className="mt-1 pl-4 text-xs text-danger">
+                {errors.suppliers.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              {...register('price')}
+              placeholder="Price"
+              className="h-[44px] w-full rounded-full border border-border bg-white px-4 text-sm text-text outline-none placeholder:text-text-light focus:border-primary"
+            />
+            {errors.price && (
+              <p className="mt-1 pl-4 text-xs text-danger">
+                {errors.price.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="mt-6 flex gap-3">
+          <button
+            type="submit"
+            disabled={isPending}
+            className="h-[44px] rounded-full bg-primary px-8 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:opacity-50"
+          >
             {isEditing ? 'Save' : 'Add'}
-          </Button>
-          <Button
+          </button>
+          <button
             type="button"
-            variant="outline"
             onClick={onClose}
-            className="flex-1"
+            className="h-[44px] rounded-full bg-border-light px-8 text-sm font-medium text-text-secondary transition-colors hover:bg-border"
           >
             Cancel
-          </Button>
+          </button>
         </div>
       </form>
     </Modal>

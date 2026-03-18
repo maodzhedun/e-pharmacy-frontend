@@ -18,14 +18,30 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Fluid typography for mobile (320px → 375px) */
+/* ═══ Fluid scaling 320px → 375px (rubber layout) ═══ */
+
+/* Fluid typography */
 @media (max-width: 374px) {
   html {
     font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (375 - 320)));
   }
 }
 
-/* Custom scrollbar */
+/* Fluid container padding */
+@media (max-width: 374px) {
+  .fluid-px {
+    padding-left: calc(10px + (20 - 10) * ((100vw - 320px) / (375 - 320))) !important;
+    padding-right: calc(10px + (20 - 10) * ((100vw - 320px) / (375 - 320))) !important;
+  }
+  .fluid-p {
+    padding: calc(10px + (20 - 10) * ((100vw - 320px) / (375 - 320))) !important;
+  }
+  .fluid-gap {
+    gap: calc(8px + (12 - 8) * ((100vw - 320px) / (375 - 320))) !important;
+  }
+}
+
+/* ═══ Custom scrollbar ═══ */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -38,7 +54,7 @@ body {
   border-radius: 3px;
 }
 
-/* Input autofill — light theme */
+/* ═══ Input autofill — light theme ═══ */
 input:-webkit-autofill {
   -webkit-text-fill-color: #1d1e21;
   -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
@@ -50,7 +66,7 @@ input:-webkit-autofill {
   outline-offset: 2px;
 }
 
-/* Hide number input arrows */
+/* ═══ Hide number input arrows ═══ */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;

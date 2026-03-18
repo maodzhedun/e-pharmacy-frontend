@@ -7,16 +7,13 @@ export default function StatusBadge({ status }: { status: string }) {
       className={clsx(
         'inline-block whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium',
         {
-          'bg-primary-light text-primary-dark': [
-            'completed',
-            'active',
-            'delivered',
-          ].includes(s),
-          'bg-info-light text-info': ['confirmed', 'shipped'].includes(s),
-          'bg-warning-light text-warning': ['pending', 'processing'].includes(
-            s
-          ),
-          'bg-danger-light text-danger': ['cancelled', 'deactive'].includes(s),
+          'bg-[#59B17A1A] text-[#59B17A]': s === 'completed' || s === 'active',
+          'bg-[#8B5CF61A] text-[#8B5CF6]': s === 'confirmed',
+          'bg-[#F59E0B1A] text-[#F59E0B]':
+            s === 'pending' || s === 'processing',
+          'bg-[#E850501A] text-[#E85050]':
+            s === 'cancelled' || s === 'deactive',
+          'bg-[#3B82F61A] text-[#3B82F6]': s === 'shipped' || s === 'delivered',
         }
       )}
     >
