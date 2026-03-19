@@ -12,27 +12,24 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </Link>
       </div>
 
-      {/* Content */}
-      <div className="flex min-h-dvh flex-col justify-center px-5 pt-24 pb-10 md:px-10 lg:flex-row lg:items-center lg:justify-between lg:px-[100px]">
+      {/* Content — max 1440px centered */}
+      <div className="mx-auto flex min-h-dvh max-w-[1440px] flex-col justify-center px-5 pt-24 pb-10 md:px-10 lg:flex-row lg:items-center lg:justify-between lg:px-[100px]">
 
-        {/* Left — Text block with constrained width + pill overlay */}
-        <div className="relative mb-12 md:mb-16 lg:mb-0">
-
-          <div className="relative w-fit max-w-full md:max-w-[550px] lg:max-w-[614px]">
-
-            <img
-              src="/images/pill.svg"
-              alt=""
-              className="pointer-events-none absolute -right-2 -top4 z-[1] h-[93px] w-[95px] md:-right-4 md:-top-8 md:h-[175px] md:w-[179px]"
-            />
-
-            
-            <h1 className="relative text-[28px] font-bold leading-[1.15] text-text md:text-[40px] lg:text-[54px]">
-              Your medication, delivered Say goodbye to all{' '}
-              <span className="text-primary">your healthcare</span>{' '}
-              worries with us
-            </h1>
-          </div>
+        {/* Left — Text block: 335×192 mobile, 614×344 tablet/desktop */}
+        <div className="relative mb-12 h-[192px] w-[335px] md:mb-16 md:h-[344px] md:w-[614px] lg:mb-0">
+          {/* Pill — absolute, top-right, ABOVE text */}
+          <img
+            src="/images/pill.svg"
+            alt=""
+            className="pointer-events-none absolute right-[10px] top-[-60px] z-10 h-[93px] w-[95px] md:right-[130px] md:top-[-120px] md:h-[175px] md:w-[179px] lg:right-[10px] lg:top-[-100px]"
+          />
+          {/* Text — 4 lines with forced break after "medication," */}
+          <h1 className="relative z-0 text-[28px] font-bold leading-[1.15] text-text md:text-[40px] lg:text-[54px]">
+            Your medication,<br />
+            delivered Say goodbye<br />
+            to all <span className="text-primary">your healthcare</span><br />
+            worries with us
+          </h1>
         </div>
 
         {/* Right — Form */}
