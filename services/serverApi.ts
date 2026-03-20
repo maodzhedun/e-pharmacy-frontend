@@ -1,4 +1,4 @@
-// services/serverApi.ts
+// services/serverApi.ts — for Server Components with cookie support
 
 import { cookies } from 'next/headers';
 import { api } from '@/app/api/api';
@@ -6,8 +6,27 @@ import type { DashboardData, ProductsResponse, OrdersResponse, SuppliersResponse
 
 async function getAuthHeaders(): Promise<Record<string, string>> {
   const cookieStore = await cookies();
-  const token = cookieStore.get('accessToken')?.value;
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  const accessToken = cookieStore.get('accessToken')?.value;
+  const refreshToken = cookieStore.get('refreshToken')?.value;
+  const sessionId = cookieStore.get('sessionId')?.value;
+
+  const headers: Record<string, string> = {};
+
+  // Forward cookies
+  const cookieParts: string[] = [];
+  if (accessToken) cookieParts.push(`accessToken=${accessToken}`);
+  if (refreshToken) cookieParts.push(`refreshToken=${refreshToken}`);
+  if (sessionId) cookieParts.push(`sessionId=${sessionId}`);
+  if (cookieParts.length > 0) {
+    headers['Cookie'] = cookieParts.join('; ');
+  }
+
+  // Also Bearer header
+  if (accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+
+  return headers;
 }
 
 export async function fetchDashboard(): Promise<DashboardData> {

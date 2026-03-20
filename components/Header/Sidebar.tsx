@@ -4,13 +4,8 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { X } from 'lucide-react';
 import clsx from 'clsx';
-import {
-  LayoutDashboard,
-  ShoppingCart,
-  User,
-  Package,
-  Users,
-} from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, User, Package, Users } from 'lucide-react';
+import LogoutButton from './LogoutButton';
 
 const NAV_ITEMS = [
   { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -30,34 +25,28 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Overlay (mobile only) */}
+      {/* Overlay */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/30 md:hidden"
-          onClick={onClose}
-        />
+        <div className="fixed inset-0 z-40 bg-black/30 lg:hidden" onClick={onClose} />
       )}
 
       {/* Sidebar panel */}
       <aside
         className={clsx(
-          'fixed left-0 top-0 z-50 flex h-screen w-[72px] flex-col items-center border-r border-border-light bg-white pt-20 transition-transform md:translate-x-0',
-          isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+          'fixed left-0 top-0 z-50 flex h-screen w-[72px] flex-col items-center border-r border-border-light bg-white pt-20 transition-transform lg:translate-x-0',
+          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
-        {/* Close button — mobile only */}
-        <button
-          onClick={onClose}
-          className="absolute right-2 top-4 p-1 md:hidden"
-        >
+        {/* Close — mobile/tablet */}
+        <button onClick={onClose} className="absolute right-2 top-4 p-1 lg:hidden">
           <X size={20} className="text-text-secondary" />
         </button>
 
+        {/* Navigation */}
         <nav className="mt-4 w-full px-3">
           <ul className="flex flex-col items-center gap-2">
             {NAV_ITEMS.map(({ path, icon: Icon, label }) => {
-              const isActive =
-                pathname === path || pathname.startsWith(path + '/');
+              const isActive = pathname === path || pathname.startsWith(path + '/');
               return (
                 <li key={path}>
                   <Link
@@ -78,6 +67,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             })}
           </ul>
         </nav>
+
+        {/* Logout — bottom, mobile/tablet only */}
+        <div className="mt-auto mb-6 lg:hidden">
+          <LogoutButton />
+        </div>
       </aside>
     </>
   );

@@ -1,8 +1,12 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('accessToken')?.value;
-  return NextResponse.json({ authenticated: !!token });
+export async function GET(request: NextRequest) {
+  const accessToken = request.cookies.get('accessToken')?.value;
+  const refreshToken = request.cookies.get('refreshToken')?.value;
+
+  // Session is valid if we have at least a refreshToken
+  // (accessToken may have expired but can be refreshed)
+  return NextResponse.json({
+    authenticated: !!(accessToken || refreshToken),
+  });
 }

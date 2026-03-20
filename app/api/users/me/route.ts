@@ -1,20 +1,16 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 import { api, getErrorMessage, getErrorStatus } from '@/app/api/api';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
+    const cookieHeader = request.headers.get('cookie') || '';
+    const accessToken = request.cookies.get('accessToken')?.value;
 
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const headers: Record<string, string> = {};
+    if (cookieHeader) headers['Cookie'] = cookieHeader;
+    if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
-    const { data } = await api.get('/user/user-info', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
+    const { data } = await api.get('/user/user-info', { headers });
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(

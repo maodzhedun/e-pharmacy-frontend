@@ -1,27 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { api, getErrorMessage, getErrorStatus } from '@/app/api/api';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { data } = await api.post('/user/login', body);
+    const response = await api.post('/user/login', body);
 
-    const cookieStore = await cookies();
-
-    cookieStore.set('accessToken', data.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24,
+    const res = NextResponse.json({
+      _id: response.data.user?._id,
+      name: response.data.user?.name || 'Admin',
+      email: response.data.user?.email || body.email,
     });
 
-    return NextResponse.json({
-      _id: data.user?._id,
-      name: data.user?.name || 'Admin',
-      email: data.user?.email || body.email,
-    });
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // Parse backend Set-Cookie and re-create with correct SameSite for environment
+    const setCookies = response.headers['set-cookie'];
+    if (setCookies) {
+      const cookieArray = Array.isArray(setCookies) ? setCookies : [setCookies];
+      for (const raw of cookieArray) {
+        const parts = raw.split(';').map((s: string) => s.trim());
+        const [nameValue] = parts;
+        const [name, ...valueParts] = nameValue.split('=');
+        const value = valueParts.join('=');
+
+        // Extract Max-Age
+        const maxAgePart = parts.find((p: string) => p.toLowerCase().startsWith('max-age='));
+        const maxAge = maxAgePart ? parseInt(maxAgePart.split('=')[1]) : 86400;
+
+        res.cookies.set(name, decodeURIComponent(value), {
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: isProduction ? 'none' : 'lax',
+          path: '/',
+          maxAge,
+        });
+      }
+    }
+
+    return res;
   } catch (error) {
     return NextResponse.json(
       { error: getErrorMessage(error) },
